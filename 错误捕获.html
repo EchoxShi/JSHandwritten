@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // window.addEventListener(
+      //   "error",
+      //   (event) => {
+      //     console.log("全局错误事件捕获：", event.message);
+      //   },
+      //   true
+      // ); // 第三个参数设置为 true 表示在捕获阶段监听事件
+
+      // window.addEventListener(
+      //   "error",
+      //   (event) => {
+      //     // 过滤js error
+      //     let target = event.target || event.srcElement;
+      //     let isElementTarget =
+      //       target instanceof HTMLScriptElement ||
+      //       target instanceof HTMLLinkElement ||
+      //       target instanceof HTMLImageElement;
+      //     if (!isElementTarget) return false;
+      //     // 上报资源地址
+      //     let url = target.src || target.href;
+      //     console.log(url);
+      //     return true;
+      //   },
+      //   true
+      // );
+
+      // 可以捕获运行时错误（异步和非异步都可以）和语法错误。
+      window.onerror = function (
+        errorMessage,
+        scriptURI,
+        lineNumber,
+        columnNumber,
+        errorObj
+      ) {
+        console.log("错误信息：", errorMessage);
+        console.log("出错文件：", scriptURI);
+        console.log("出错行号：", lineNumber);
+        console.log("出错列号：", columnNumber);
+        console.log("错误详情：", errorObj);
+        return true; //returntrue 可以阻止默认行为，不会在控制台飘红。
+      };
+      // 可以捕获资源加载异常
+      window.addEventListener(
+        "error",
+        (error) => {
+          console.log("捕获到资源异常：", error);
+        },
+        true
+      );
+      // // 资源加载错误
+      // const img = new Image();
+      // img.src = "non_existent_image.jpg"; // 试图加载不存在的图片
+      // 运行时错误
+      // let a = 1;
+      // let a = 2;
+      // 上面的加载异常会在捕获阶段触发全局的 error 事件
+
+      // }
+    </script>
+    <!-- 引入 会抛出错误的脚本 -->
+    <script type="text/javascript" src="error.js"></script>
+  </body>
+</html>

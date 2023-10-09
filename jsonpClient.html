@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- jsonpclient 代码
+即发送请求：到 http://localhost:3000/?callback=myCallback
+后端会返回一个类型为application/javascript的文件，并且执行
+在前端代码中则是
+let script = document.createElement('script')
+script.src = 'http://localhost:3000/?callback=myCallback' -->
+    <script>
+      function handleResponse(response) {
+        console.log('后端返回的数据是：',response);
+      }
+      let script = document.createElement("script");
+      script.src = "http://localhost:3000/?callback=handleResponse";
+      // 脚本的路径错误，找不到的时候就会失败。
+      // script.src = "http://localhosterror:3000/?callback=handleResponse";
+      // script元素有onerror 事件，但是不是所有浏览器都实现了
+      script.onerror = function(error){
+        console.log('script请求失败了', error)
+      }
+      document.body.insertBefore(script, document.body.firstChild);
+
+    </script>
+  </body>
+</html>

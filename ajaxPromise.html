@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- <script src="ajaxPromise.js"></script> -->
+  </head>
+  <body>
+    <script>
+      // 在浏览器环境下，直接使用 import 语句是不支持的。import 语句通常用于模块化的 JavaScript 开发，需要在支持模块化的环境中使用，如 Node.js 或通过构建工具（如Webpack、Rollup等）进行打包。
+      // 所以从外部脚本导入也是不行的。
+      // import ajaxPromise from 'ajaxPromise.js'; // 错误
+      // console.log(ajaxPromise)
+
+
+      // 封装的请求
+      function ajaxPromise(method, url, data, async) {
+        return new Promise((resolve, reject) => {
+          let xhr = new XMLHttpRequest();
+          xhr.open(method, url, async);
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+              if (
+                (xhr.status >= 200 && xhr.status < 300) ||
+                xhr.status === 304
+              ) {
+                console.log("拿到响应体为：", xhr.responseText);
+                resolve(xhr.responseText);
+              } else {
+                console.log("请求没有完成", xhr.status);
+              }
+            }
+          };
+          // 事件处理函数都是小写
+          xhr.onerror = function (error) {
+            console.error("请求错误:", error);
+            reject(error);
+          };
+          if (method === "POST" || method === "PUT" || method === "PATCH") {
+            xhr.setRequestHeader("Content-Type", "application/json");
+          }
+          switch (method) {
+            case "GET":
+              xhr.send(null); //兼容浏览器
+              break;
+            case "POST":
+            case "PUT":
+            case "PATCH":
+              xhr.send(JSON.stringify(data));
+              break;
+            case "DELETE":
+              xhr.send();
+              break;
+            default:
+              console.error("不支持的请求方法:", method);
+              reject(new Error(`不支持的请求方法: ${method}`));
+          }
+        });
+      }
+
+      // 调用方法
+      // method的大小写不敏感
+      ajaxPromise('GET', 'http://127.0.0.1:5500/index.html', true)
+    </script>
+  </body>
+</html>
